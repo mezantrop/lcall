@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -86,10 +87,49 @@ int fn_getaddrinfo(void **args) {
 
 /* ------------------------------------------------------------------------- */
 int fn_getnameinfo(void **args) {
-	const char *node    = args[0];
+	const char *addr    = args[0];
 	const char *service = args[1];
 
-	printf("getnameinfo(%s, %s)\n", node, service);
+	struct sockaddr_storage ss;
+	socklen_t salen;
+	char host[NI_MAXHOST];
+	char serv[NI_MAXSERV];
+
+	char *end;
+	long port = strtol(service, &end, 10);
+	if (*end != '\0' || port < 0 || port > 65535) {
+		fprintf(stderr, "Wrong service number: %s\n", service);
+		return 1;
+	}
+
+	if (inet_pton(AF_INET, addr,
+		&((struct sockaddr_in *)&ss)->sin_addr) == 1) {
+
+		struct sockaddr_in *sin = (struct sockaddr_in *)&ss;
+		sin->sin_family = AF_INET;
+		sin->sin_port = htons(port);
+		salen = sizeof(*sin);
+	} else
+		if (inet_pton(AF_INET6, addr,
+			&((struct sockaddr_in6 *)&ss)->sin6_addr) == 1) {
+
+			struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)&ss;
+			sin6->sin6_family = AF_INET6;
+			sin6->sin6_port = htons(port);
+			salen = sizeof(*sin6);
+		} else {
+			fprintf(stderr, "invalid IP address: %s\n", addr);
+			return -1;
+		}
+
+	if (getnameinfo((struct sockaddr *)&ss, salen, host, sizeof(host),
+		serv, sizeof(serv), NI_NAMEREQD | NI_NUMERICSERV)) {
+
+		perror("getnameinfo");
+		return 1;
+	}
+
+	printf("%s:%s\n", host, serv);
 
 	return 0;
 }

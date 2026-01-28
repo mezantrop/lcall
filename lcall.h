@@ -1,14 +1,7 @@
-/* Argumet data types */
-enum arg_type {
-	ARG_INT,
-	ARG_STRING,
-	ARG_PTR,
-	ARG_STRUCT,
-};
+#define NARGS(ARR) (sizeof(ARR)/sizeof(ARR[0]))
 
 /* Argumet descriptors */
 struct arg_desc {
-	enum arg_type type;
 	const char *name;
 	int mandatory;
 };

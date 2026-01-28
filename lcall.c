@@ -4,19 +4,16 @@
 
 #include "lcall.h"
 
-/*  #define NFUNCS (sizeof(funcs)/sizeof(funcs[0])) */
-#define NARGS(ARR) (sizeof(ARR)/sizeof(ARR[0]))
-
 /* ------------------------------------------------------------------------- */
 struct arg_desc getaddrinfo_args[] = {
-	{ ARG_STRING,	"node",		1 },
-	{ ARG_STRING,	"service",	0 },
+	{ "node",		1 },
+	{ "service",	0 },
 
 };
 
 struct arg_desc getnameinfo_args[] = {
-	{ ARG_STRING,	"node",		1 },
-	{ ARG_STRING,	"service",	0 },
+	{ "addr",		1 },
+	{ "service",	0 },
 };
 
 
@@ -38,7 +35,7 @@ struct func_desc funcs[] = {
 
 /* ------------------------------------------------------------------------- */
 struct func_desc *find_func(const char *name) {
-	for (size_t i = 0; i < sizeof(funcs)/sizeof(funcs[0]); i++) {
+	for (size_t i = 0; i < NARGS(funcs); i++) {
 		if (!strcmp(funcs[i].name, name))
 			return &funcs[i];
 	}
