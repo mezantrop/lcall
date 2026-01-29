@@ -26,6 +26,10 @@ struct arg_desc if_indextoname_args[] = {
 	{ "ifindex",	1 },
 };
 
+struct arg_desc getpriority_args[] = {
+	{ "pid",		1 },
+};
+
 struct func_desc funcs[] = {
 	{
 		.name = "getaddrinfo",
@@ -50,6 +54,12 @@ struct func_desc funcs[] = {
 		.fn   = fn_if_indextoname,
 		.argc = NARGS(if_indextoname_args),
 		.argv = if_indextoname_args,
+	},
+	{
+		.name = "getpriority",
+		.fn   = fn_getpriority,
+		.argc = NARGS(getpriority_args),
+		.argv = getpriority_args,
 	},
 };
 
@@ -109,8 +119,6 @@ int main(int argc, char* argv[]) {
 			"  lcall getnameinfo addr=<IP> [service=<port>]         : socket address -> host/service\n"
 			"  lcall if_nametoindex name=<ifname>                   : interface name -> index\n"
 			"  lcall if_indextoname index=<ifindex>                 : index -> interface name\n"
-			"  lcall sched_setaffinity pid=<pid> mask=<mask>        : set process/thread CPU mask\n"
-			"  lcall sched_getaffinity pid=<pid>                    : get process/thread CPU mask\n"
 			"  lcall setpriority pid=<pid> prio=<value>             : set process priority\n"
 			"  lcall getpriority pid=<pid>                          : get process priority\n"
 		);

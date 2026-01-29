@@ -67,7 +67,7 @@ Complex arguments (`struct`, pointers, callbacks) are either:
 | if_nametoindex    | :white_check_mark:     | interface names to indexes conversion                        |
 | if_indextoname    | :white_check_mark:     | interface indexes to names mapping                           |
 | setpriority       | :white_large_square:   | set program scheduling priority                              |
-| getpriority       | :white_large_square:   | get program scheduling priority                              |
+| getpriority       | :white_check_mark:     | get program scheduling priority                              |
 
 ## Possible future directions
 

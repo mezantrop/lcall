@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <errno.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -9,6 +10,9 @@
 #include <arpa/inet.h>
 
 #include <net/if.h>
+
+#include <sys/time.h>
+#include <sys/resource.h>
 
 #include "lcall.h"
 #include "funcs.h"
@@ -163,5 +167,28 @@ int fn_if_indextoname(void **args) {
 	}
 
 	printf("%s\n", ifname);
+	return 0;
+}
+
+/* ------------------------------------------------------------------------- */
+int fn_getpriority(void **args) {
+
+	const char *str_pid = args[0];
+
+	char *end;
+	pid_t pid = (pid_t)strtol(str_pid, &end, 10);
+	if (*end != '\0' || pid < 0) {
+		fprintf(stderr, "Wrong Process ID: %s\n", str_pid);
+		return 1;
+	}
+
+	errno = 0;
+	int prio = getpriority(PRIO_PROCESS, pid);
+	if (prio == -1 && errno != 0) {
+		perror("getpriority");
+		return 1;
+	}
+
+	printf("%d\n", prio);
 	return 0;
 }
