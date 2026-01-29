@@ -3,6 +3,8 @@
 #include <stdlib.h>
 
 #include "lcall.h"
+#include "funcs.h"
+
 
 /* ------------------------------------------------------------------------- */
 struct arg_desc getaddrinfo_args[] = {
@@ -16,6 +18,13 @@ struct arg_desc getnameinfo_args[] = {
 	{ "service",	0 },
 };
 
+struct arg_desc if_nametoindex_args[] = {
+	{ "ifname",		1 },
+};
+
+struct arg_desc if_indextoname_args[] = {
+	{ "ifindex",	1 },
+};
 
 struct func_desc funcs[] = {
 	{
@@ -29,6 +38,18 @@ struct func_desc funcs[] = {
 		.fn   = fn_getnameinfo,
 		.argc = NARGS(getnameinfo_args),
 		.argv = getnameinfo_args,
+	},
+	{
+		.name = "if_nametoindex",
+		.fn   = fn_if_nametoindex,
+		.argc = NARGS(if_nametoindex_args),
+		.argv = if_nametoindex_args,
+	},
+	{
+		.name = "if_indextoname",
+		.fn   = fn_if_indextoname,
+		.argc = NARGS(if_indextoname_args),
+		.argv = if_indextoname_args,
 	},
 };
 
@@ -80,7 +101,19 @@ int build_args(struct func_desc *f, int argc, char **argv, void **out_args) {
 int main(int argc, char* argv[]) {
 
 	if (argc < 2) {
-		fprintf(stderr, "Usage: lcall <func> [k=v ...]\n");
+		fprintf(stderr,
+			"Usage: lcall <func> [k=v ...]\n"
+			"\n"
+			"Examples:\n"
+			"  lcall getaddrinfo node=<hostname> [service=<port>]   : resolve host/service\n"
+			"  lcall getnameinfo addr=<IP> [service=<port>]         : socket address -> host/service\n"
+			"  lcall if_nametoindex name=<ifname>                   : interface name -> index\n"
+			"  lcall if_indextoname index=<ifindex>                 : index -> interface name\n"
+			"  lcall sched_setaffinity pid=<pid> mask=<mask>        : set process/thread CPU mask\n"
+			"  lcall sched_getaffinity pid=<pid>                    : get process/thread CPU mask\n"
+			"  lcall setpriority pid=<pid> prio=<value>             : set process priority\n"
+			"  lcall getpriority pid=<pid>                          : get process priority\n"
+		);
 		return 1;
 	}
 

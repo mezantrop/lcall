@@ -1,23 +1,21 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 
-#include "lcall.h"
+#include <net/if.h>
 
-/* ------------------------------------------------------------------------- */
-#define SIN4_ADDR(sa)   ((struct sockaddr_in *)sa)->sin_addr
-#define SIN4_PORT(sa)   ((struct sockaddr_in *)sa)->sin_port
-#define SIN6_ADDR(sa)   ((struct sockaddr_in6 *)sa)->sin6_addr
-#define SIN6_PORT(sa)   ((struct sockaddr_in6 *)sa)->sin6_port
+#include "lcall.h"
+#include "funcs.h"
+
 
 /* ------------------------------------------------------------------------- */
 int fn_getaddrinfo(void **args) {
-
 	const char *node = args[0];
 	const char *service = args[1];
 	struct addrinfo hints, *r = NULL, *res = NULL;
@@ -47,20 +45,20 @@ int fn_getaddrinfo(void **args) {
 		switch (r->ai_family) {
 			case AF_INET:
 				af = AF_INET;
-				addr = &SIN4_ADDR(r->ai_addr);
+				addr = &((struct sockaddr_in *)r->ai_addr)->sin_addr;
 				buflen = INET_ADDRSTRLEN;
 				lbr = "";
 				rbr = "";
-				port = ntohs(SIN4_PORT(r->ai_addr));
+				port = ntohs(((struct sockaddr_in *)r->ai_addr)->sin_port);
 			break;
 
 			case AF_INET6:
 				af = AF_INET6;
-				addr = &SIN6_ADDR(r->ai_addr);
+				addr = &((struct sockaddr_in6 *)r->ai_addr)->sin6_addr;
 				buflen = INET6_ADDRSTRLEN;
 				lbr = "[";
 				rbr = "]";
-				port = ntohs(SIN6_PORT(r->ai_addr));
+				port = ntohs(((struct sockaddr_in6 *)r->ai_addr)->sin6_port);
 			break;
 
 			default:
@@ -87,7 +85,7 @@ int fn_getaddrinfo(void **args) {
 
 /* ------------------------------------------------------------------------- */
 int fn_getnameinfo(void **args) {
-	const char *addr    = args[0];
+	const char *addr = args[0];
 	const char *service = args[1];
 
 	struct sockaddr_storage ss;
@@ -130,6 +128,40 @@ int fn_getnameinfo(void **args) {
 	}
 
 	printf("%s:%s\n", host, serv);
+	return 0;
+}
 
+/* ------------------------------------------------------------------------- */
+int fn_if_nametoindex(void **args) {
+	unsigned int i;
+
+
+	if (!(i = if_nametoindex(args[0]))) {
+		perror("if_nametoindex");
+		return 1;
+	}
+
+	printf("%d\n", i);
+	return 0;
+}
+
+/* ------------------------------------------------------------------------- */
+int fn_if_indextoname(void **args) {
+	char ifname[IF_NAMESIZE];
+	const char *iidx = args[0];
+
+	char *end;
+	long ifindex = strtol(iidx, &end, 10);
+	if (*end != '\0' || ifindex < 1 || ifindex > UINT_MAX) {
+		fprintf(stderr, "Wrong interface index: %s\n", iidx);
+		return 1;
+	}
+
+	if (!if_indextoname((unsigned int)ifindex, ifname)) {
+		perror("if_indextoname");
+		return 1;
+	}
+
+	printf("%s\n", ifname);
 	return 0;
 }

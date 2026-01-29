@@ -64,8 +64,8 @@ Complex arguments (`struct`, pointers, callbacks) are either:
 | ----------------- | -----------------------| -------------------------------------------------------------|
 | getaddrinfo       | :white_check_mark:     | network address and service translation                      |
 | getnameinfo       | :white_check_mark:     | convert a socket address to a corresponding host and service |
-| if_nametoindex    | :white_large_square:   | interface names to indexes conversion                        |
-| if_indextoname    | :white_large_square:   | interface indexes to names mapping                           |
+| if_nametoindex    | :white_check_mark:     | interface names to indexes conversion                        |
+| if_indextoname    | :white_check_mark:     | interface indexes to names mapping                           |
 | sched_setaffinity | :white_large_square:   | set a thread's CPU affinity mask                             |
 | sched_getaffinity | :white_large_square:   | get a thread's CPU affinity mask                             |
 | setpriority       | :white_large_square:   | set program scheduling priority                              |

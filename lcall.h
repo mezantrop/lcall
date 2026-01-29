@@ -13,6 +13,3 @@ struct func_desc {
 	int argc;
 	struct arg_desc *argv;
 };
-
-int fn_getaddrinfo(void **args);
-int fn_getnameinfo(void **args);
