@@ -60,6 +60,17 @@ Complex arguments (`struct`, pointers, callbacks) are either:
 - very small function set
 - developed incrementally based on real use cases
 
+| f()               | :x: :white_check_mark: | Description                                                  |
+| ----------------- | -----------------------| -------------------------------------------------------------|
+| getaddrinfo       | :white_check_mark:     | network address and service translation                      |
+| getnameinfo       | :white_check_mark:     | convert a socket address to a corresponding host and service |
+| if_nametoindex    | :white_large_square:   | interface names to indexes conversion                        |
+| if_indextoname    | :white_large_square:   | interface indexes to names mapping                           |
+| sched_setaffinity | :white_large_square:   | set a thread's CPU affinity mask                             |
+| sched_getaffinity | :white_large_square:   | get a thread's CPU affinity mask                             |
+| setpriority       | :white_large_square:   | set program scheduling priority                              |
+| getpriority       | :white_large_square:   | get program scheduling priority                              |
+
 ## Possible future directions
 
 - support for additional libraries via `dlopen`
