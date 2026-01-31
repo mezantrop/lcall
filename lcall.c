@@ -35,6 +35,9 @@ struct arg_desc setpriority_args[] = {
 	{ "prio",		1 },
 };
 
+struct arg_desc time_args[] = {
+};
+
 
 struct func_desc funcs[] = {
 	{
@@ -72,6 +75,12 @@ struct func_desc funcs[] = {
 		.fn   = fn_setpriority,
 		.argc = NARGS(setpriority_args),
 		.argv = setpriority_args,
+	},
+	{
+		.name = "time",
+		.fn   = fn_time,
+		.argc = NARGS(time_args),
+		.argv = time_args,
 	},
 };
 
@@ -127,12 +136,13 @@ int main(int argc, char* argv[]) {
 			"Usage: lcall <func> [k=v ...]\n"
 			"\n"
 			"Examples:\n"
-			"  lcall getaddrinfo node=<hostname> [service=<port>]   : resolve host/service\n"
-			"  lcall getnameinfo addr=<IP> [service=<port>]         : socket address -> host/service\n"
-			"  lcall if_nametoindex name=<ifname>                   : interface name -> index\n"
-			"  lcall if_indextoname index=<ifindex>                 : index -> interface name\n"
-			"  lcall setpriority pid=<pid> prio=<value>             : set process priority\n"
-			"  lcall getpriority pid=<pid>                          : get process priority\n"
+			"  lcall getaddrinfo node=<host> [service=<port>]   : resolve host/service\n"
+			"  lcall getnameinfo addr=<IP> [service=<port>]     : IP address -> host/service\n"
+			"  lcall if_nametoindex name=<ifname>               : interface name -> index\n"
+			"  lcall if_indextoname index=<ifindex>             : index -> interface name\n"
+			"  lcall setpriority pid=<pid> prio=<value>         : set process priority\n"
+			"  lcall getpriority pid=<pid>                      : get process priority\n"
+			"  lcall time                                       : seconds since the Epoch\n"
 		);
 		return 1;
 	}

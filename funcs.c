@@ -14,6 +14,9 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
+#include <inttypes.h>
+#include <time.h>
+
 #include "lcall.h"
 #include "funcs.h"
 
@@ -30,7 +33,6 @@ int fn_getaddrinfo(void **args) {
 	int af;
 	void *addr;
 	socklen_t buflen;
-
 
 	memset(&hints, 0, sizeof(struct addrinfo));
 	hints.ai_family = AF_UNSPEC;
@@ -217,5 +219,20 @@ int fn_setpriority(void **args) {
 		return 1;
 	}
 
+	return 0;
+}
+
+/* ------------------------------------------------------------------------- */
+int fn_time(void **args) {
+
+	(void)args;
+	time_t t = -1;
+
+	if ((t = time(NULL)) == -1) {
+		perror("time");
+		return 1;
+	}
+
+	printf("%jd\n", (intmax_t)t);
 	return 0;
 }
