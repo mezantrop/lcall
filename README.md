@@ -53,7 +53,6 @@ lcall getaddrinfo node=example.com service=80
 lcall getnameinfo addr=127.0.0.1 service=80
 lcall if_nametoindex ifname=eth0
 lcall if_indextoname ifindex=2
-lcall time
 ```
 
 ## Functions
