@@ -68,7 +68,7 @@ Complex arguments (`struct`, pointers, callbacks) are either:
 | if_indextoname    | :white_check_mark:     | interface indexes to names mapping                           |
 | setpriority       | :white_check_mark:     | set program scheduling priority                              |
 | getpriority       | :white_check_mark:     | get program scheduling priority                              |
-| time              | :white_large_square:   | time as the number of seconds since the Epoch                |
+| time              | :white_check_mark:     | time as the number of seconds since the Epoch                |
 | getuid and bros   | :white_large_square:   | getuid, geteuid & getgid, getegid get user & group identity  |
 | sysconf           | :white_large_square:   | TBD                                                          |
 | pathconf          | :white_large_square:   | TBD                                                          |
