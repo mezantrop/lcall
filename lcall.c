@@ -30,6 +30,12 @@ struct arg_desc getpriority_args[] = {
 	{ "pid",		1 },
 };
 
+struct arg_desc setpriority_args[] = {
+	{ "pid",		1 },
+	{ "prio",		1 },
+};
+
+
 struct func_desc funcs[] = {
 	{
 		.name = "getaddrinfo",
@@ -60,6 +66,12 @@ struct func_desc funcs[] = {
 		.fn   = fn_getpriority,
 		.argc = NARGS(getpriority_args),
 		.argv = getpriority_args,
+	},
+	{
+		.name = "setpriority",
+		.fn   = fn_setpriority,
+		.argc = NARGS(setpriority_args),
+		.argv = setpriority_args,
 	},
 };
 

@@ -100,7 +100,7 @@ int fn_getnameinfo(void **args) {
 	char *end;
 	long port = strtol(service, &end, 10);
 	if (*end != '\0' || port < 0 || port > 65535) {
-		fprintf(stderr, "Wrong service number: %s\n", service);
+		fprintf(stderr, "Invalid service number: %s\n", service);
 		return 1;
 	}
 
@@ -120,7 +120,7 @@ int fn_getnameinfo(void **args) {
 			sin6->sin6_port = htons(port);
 			salen = sizeof(*sin6);
 		} else {
-			fprintf(stderr, "invalid IP address: %s\n", addr);
+			fprintf(stderr, "Invalid IP address: %s\n", addr);
 			return -1;
 		}
 
@@ -157,7 +157,7 @@ int fn_if_indextoname(void **args) {
 	char *end;
 	long ifindex = strtol(iidx, &end, 10);
 	if (*end != '\0' || ifindex < 1 || ifindex > UINT_MAX) {
-		fprintf(stderr, "Wrong interface index: %s\n", iidx);
+		fprintf(stderr, "Invalid interface index: %s\n", iidx);
 		return 1;
 	}
 
@@ -178,7 +178,7 @@ int fn_getpriority(void **args) {
 	char *end;
 	pid_t pid = (pid_t)strtol(str_pid, &end, 10);
 	if (*end != '\0' || pid < 0) {
-		fprintf(stderr, "Wrong Process ID: %s\n", str_pid);
+		fprintf(stderr, "Invalid Process ID: %s\n", str_pid);
 		return 1;
 	}
 
@@ -190,5 +190,32 @@ int fn_getpriority(void **args) {
 	}
 
 	printf("%d\n", prio);
+	return 0;
+}
+
+/* ------------------------------------------------------------------------- */
+int fn_setpriority(void **args) {
+
+	const char *str_pid = args[0];
+	const char *str_prio = args[1];
+
+	char *end;
+	pid_t pid = (pid_t)strtol(str_pid, &end, 10);
+	if (*end != '\0' || pid < 0) {
+		fprintf(stderr, "Invalid Process ID: %s\n", str_pid);
+		return 1;
+	}
+
+	int prio = (int)strtol(str_prio, &end, 10);
+	if (*end != '\0' || prio < -20 || prio > 19) {
+		fprintf(stderr, "Invalid prio value: %s\n", str_prio);
+		return 1;
+	}
+
+	if (setpriority(PRIO_PROCESS, pid, prio) == -1) {
+		perror("setpriority");
+		return 1;
+	}
+
 	return 0;
 }
