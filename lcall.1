@@ -1,0 +1,109 @@
+.TH LCALL 1 "January 2026" "lcall 1.0" "User Commands"
+.SH NAME
+lcall \- call selected libc functions from the command line
+.SH SYNOPSIS
+.B lcall
+.I func
+.RI [ key = value " ...]"
+.SH DESCRIPTION
+.B lcall
+is a minimal command-line utility that allows calling a small, fixed set
+of selected libc functions directly from the shell.
+
+It is intended as a lightweight bridge between shell scripts and POSIX APIs,
+without using interpreters, scripting languages, or persistent daemons.
+
+Arguments are passed as
+.BR key=value
+pairs. Only simple argument types such as strings and integers are supported.
+.SH FUNCTIONS
+.TP
+.B getaddrinfo
+Resolve a host and service name into network addresses.
+.RS
+.TP
+Arguments:
+.TP
+.B node
+Hostname or address string.
+.TP
+.B service
+Service name or port number (optional).
+.TP
+.B afamily
+Address family filter: \fB4\fP for IPv4, \fB6\fP for IPv6 (optional).
+.RE
+.TP
+.B getnameinfo
+Convert a numeric IP address into a host and service name.
+.RS
+.TP
+Arguments:
+.TP
+.B addr
+IPv4 or IPv6 address.
+.TP
+.B service
+Service or port (optional).
+.RE
+.TP
+.B if_nametoindex
+Convert a network interface name to its index.
+.RS
+.TP
+Arguments:
+.TP
+.B name
+Interface name (e.g. \fBeth0\fP).
+.RE
+.TP
+.B if_indextoname
+Convert a network interface index to its name.
+.RS
+.TP
+Arguments:
+.TP
+.B index
+Interface index.
+.RE
+.SH EXAMPLES
+Resolve a hostname:
+.PP
+.nf
+lcall getaddrinfo node=example.com service=80
+.fi
+.PP
+Resolve IPv6 only:
+.PP
+.nf
+lcall getaddrinfo node=example.com afamily=6
+.fi
+.PP
+Reverse lookup:
+.PP
+.nf
+lcall getnameinfo addr=8.8.8.8
+.fi
+.PP
+Interface name to index:
+.PP
+.nf
+lcall if_nametoindex name=lo0
+.fi
+.SH EXIT STATUS
+Returns 0 on success.
+On error, a non-zero value is returned and an error message is printed
+to standard error.
+.SH NOTES
+.B lcall
+is not a general-purpose foreign function interface.
+Only explicitly implemented functions are available.
+.SH SEE ALSO
+getaddrinfo(3),
+getnameinfo(3),
+if_nametoindex(3),
+if_indextoname(3)
+.SH AUTHOR
+Written by Mikhail Zakharov <zmey20000@yahoo.com>.
+Motivated by the desire to call libc functions from shell scripts
+without relying on Python or other interpreters.

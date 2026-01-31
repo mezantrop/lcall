@@ -14,4 +14,4 @@ struct func_desc {
 	struct arg_desc *argv;
 };
 
-#define LCALL_VERSION "1.0"
+#define LCALL_VERSION "1.1"

@@ -10,7 +10,7 @@
 struct arg_desc getaddrinfo_args[] = {
 	{ "node",		1 },
 	{ "service",	0 },
-
+	{ "afamily",	0 },
 };
 
 struct arg_desc getnameinfo_args[] = {
@@ -108,10 +108,17 @@ int main(int argc, char* argv[]) {
 			"Version: %s\n"
 			"\n"
 			"Examples:\n"
-			"  lcall getaddrinfo node=<host> [service=<port>]   : resolve host/service\n"
-			"  lcall getnameinfo addr=<IP> [service=<port>]     : IP address -> host/service\n"
-			"  lcall if_nametoindex name=<ifname>               : interface name -> index\n"
-			"  lcall if_indextoname index=<ifindex>             : index -> interface name\n"
+			"  lcall getaddrinfo node=<host> [service=<port> afamily=<4|6>]\n"
+			"      resolve host and service, filter by the address family\n"
+			"\n"
+			"  lcall getnameinfo addr=<IP> [service=<port>]\n"
+			"      IP address -> host/service\n"
+			"\n"
+			"  lcall if_nametoindex name=<ifname>\n"
+			"      interface name -> index\n"
+			"\n"
+			"  lcall if_indextoname index=<ifindex>\n"
+			"      index -> interface name\n"
 			, LCALL_VERSION
 		);
 		return 1;

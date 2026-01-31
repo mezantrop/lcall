@@ -18,6 +18,8 @@ clean:
 install:
 	install -d $(PREFIX)/bin/
 	install -m 755 lcall $(PREFIX)/bin/
+	install -d $(PREFIX)/share/man/man1
+	install -m 644 lcall.1 $(PREFIX)/share/man/man1/
 
 deinstall: uninstall
 	rm -f $(PREFIX)/bin/lcall

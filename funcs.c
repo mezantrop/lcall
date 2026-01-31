@@ -19,6 +19,7 @@
 int fn_getaddrinfo(void **args) {
 	const char *node = args[0];
 	const char *service = args[1];
+	const char *str_af = args[2];
 	struct addrinfo hints, *r = NULL, *res = NULL;
 	char buf[INET6_ADDRSTRLEN];
 	const char *lbr = "";
@@ -29,7 +30,17 @@ int fn_getaddrinfo(void **args) {
 	socklen_t buflen;
 
 	memset(&hints, 0, sizeof(struct addrinfo));
-	hints.ai_family = AF_UNSPEC;
+	if (!str_af) {
+		hints.ai_family = AF_UNSPEC;
+	} else if (!strcmp(str_af, "4")) {
+		hints.ai_family = AF_INET;
+	} else if (!strcmp(str_af, "6")) {
+		hints.ai_family = AF_INET6;
+	} else {
+		fprintf(stderr, "Invalid address family: %s (use 4 or 6)\n", str_af);
+		return 1;
+	}
+
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_ADDRCONFIG;
 
