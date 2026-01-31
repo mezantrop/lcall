@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * Copyright (c) 2026 Mikhail Zakharov
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

@@ -49,7 +49,7 @@ Complex types (pointers, structs) are either omitted or initialized internally.
 ### Examples
 
 ```sh
-lcall getaddrinfo node=example.com service=80
+lcall getaddrinfo node=example.com service=80 afamily=6
 lcall getnameinfo addr=127.0.0.1 service=80
 lcall if_nametoindex ifname=eth0
 lcall if_indextoname ifindex=2
@@ -59,7 +59,7 @@ lcall if_indextoname ifindex=2
 
 | Function       | Status             | Description                                  | Arguments                                    |
 | -------------- | ------------------ | -------------------------------------------- | -------------------------------------------- |
-| getaddrinfo    | :white_check_mark: | network address and service translation      | node=&lt;hostname&gt; [service=&lt;port&gt;] |
+| getaddrinfo    | :white_check_mark: | network address and service translation      | node=&lt;hostname&gt; [service=&lt;port&gt; afamily=&lt;4\|6&gt;] |
 | getnameinfo    | :white_check_mark: | convert a socket address to host and service | addr=&lt;IP&gt; service=&lt;port&gt;         |
 | if_nametoindex | :white_check_mark: | interface name → index                       | ifname=&lt;name&gt;                          |
 | if_indextoname | :white_check_mark: | interface index → name                       | ifindex=&lt;number&gt;                       |

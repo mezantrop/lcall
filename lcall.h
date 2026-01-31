@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * Copyright (c) 2026 Mikhail Zakharov
+ */
+
 #define NARGS(ARR) (sizeof(ARR)/sizeof(ARR[0]))
 
 /* Argumet descriptors */
