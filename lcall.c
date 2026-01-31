@@ -26,18 +26,6 @@ struct arg_desc if_indextoname_args[] = {
 	{ "ifindex",	1 },
 };
 
-struct arg_desc getpriority_args[] = {
-	{ "pid",		1 },
-};
-
-struct arg_desc setpriority_args[] = {
-	{ "pid",		1 },
-	{ "prio",		1 },
-};
-
-struct arg_desc time_args[] = {
-};
-
 
 struct func_desc funcs[] = {
 	{
@@ -63,24 +51,6 @@ struct func_desc funcs[] = {
 		.fn   = fn_if_indextoname,
 		.argc = NARGS(if_indextoname_args),
 		.argv = if_indextoname_args,
-	},
-	{
-		.name = "getpriority",
-		.fn   = fn_getpriority,
-		.argc = NARGS(getpriority_args),
-		.argv = getpriority_args,
-	},
-	{
-		.name = "setpriority",
-		.fn   = fn_setpriority,
-		.argc = NARGS(setpriority_args),
-		.argv = setpriority_args,
-	},
-	{
-		.name = "time",
-		.fn   = fn_time,
-		.argc = NARGS(time_args),
-		.argv = time_args,
 	},
 };
 
@@ -135,14 +105,14 @@ int main(int argc, char* argv[]) {
 		fprintf(stderr,
 			"Usage: lcall <func> [k=v ...]\n"
 			"\n"
+			"Version: %s\n"
+			"\n"
 			"Examples:\n"
 			"  lcall getaddrinfo node=<host> [service=<port>]   : resolve host/service\n"
 			"  lcall getnameinfo addr=<IP> [service=<port>]     : IP address -> host/service\n"
 			"  lcall if_nametoindex name=<ifname>               : interface name -> index\n"
 			"  lcall if_indextoname index=<ifindex>             : index -> interface name\n"
-			"  lcall setpriority pid=<pid> prio=<value>         : set process priority\n"
-			"  lcall getpriority pid=<pid>                      : get process priority\n"
-			"  lcall time                                       : seconds since the Epoch\n"
+			, LCALL_VERSION
 		);
 		return 1;
 	}

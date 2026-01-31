@@ -11,12 +11,6 @@
 
 #include <net/if.h>
 
-#include <sys/time.h>
-#include <sys/resource.h>
-
-#include <inttypes.h>
-#include <time.h>
-
 #include "lcall.h"
 #include "funcs.h"
 
@@ -169,70 +163,5 @@ int fn_if_indextoname(void **args) {
 	}
 
 	printf("%s\n", ifname);
-	return 0;
-}
-
-/* ------------------------------------------------------------------------- */
-int fn_getpriority(void **args) {
-
-	const char *str_pid = args[0];
-
-	char *end;
-	pid_t pid = (pid_t)strtol(str_pid, &end, 10);
-	if (*end != '\0' || pid < 0) {
-		fprintf(stderr, "Invalid Process ID: %s\n", str_pid);
-		return 1;
-	}
-
-	errno = 0;
-	int prio = getpriority(PRIO_PROCESS, pid);
-	if (prio == -1 && errno != 0) {
-		perror("getpriority");
-		return 1;
-	}
-
-	printf("%d\n", prio);
-	return 0;
-}
-
-/* ------------------------------------------------------------------------- */
-int fn_setpriority(void **args) {
-
-	const char *str_pid = args[0];
-	const char *str_prio = args[1];
-
-	char *end;
-	pid_t pid = (pid_t)strtol(str_pid, &end, 10);
-	if (*end != '\0' || pid < 0) {
-		fprintf(stderr, "Invalid Process ID: %s\n", str_pid);
-		return 1;
-	}
-
-	int prio = (int)strtol(str_prio, &end, 10);
-	if (*end != '\0' || prio < -20 || prio > 19) {
-		fprintf(stderr, "Invalid prio value: %s\n", str_prio);
-		return 1;
-	}
-
-	if (setpriority(PRIO_PROCESS, pid, prio) == -1) {
-		perror("setpriority");
-		return 1;
-	}
-
-	return 0;
-}
-
-/* ------------------------------------------------------------------------- */
-int fn_time(void **args) {
-
-	(void)args;
-	time_t t = -1;
-
-	if ((t = time(NULL)) == -1) {
-		perror("time");
-		return 1;
-	}
-
-	printf("%jd\n", (intmax_t)t);
 	return 0;
 }

@@ -1,84 +1,73 @@
 # lcall
 
 `lcall` is a minimalistic CLI utility for calling selected `libc` functions
-(and potentially functions from other system libraries) directly from the
-command line.
+directly from the command line.
 
-The project is intended as a lightweight bridge between shell scripts and
-POSIX APIs, without using high-level languages, interpreters, or heavy
-runtime dependencies.
+It provides a lightweight bridge between shell scripts and POSIX APIs,
+without using interpreters, high-level languages, or heavy runtime dependencies.
+
+<a href="https://www.buymeacoffee.com/mezantrop" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ## Motivation
 
-Sometimes you just want to:
+Sometimes you just need to:
 
-- call a system function directly from a shell script
-- use OS-provided mechanisms (DNS resolver, time, filesystem, etc.)
-- avoid Python/Perl for a single libc call
-- have a small, compiled, predictable tool
+* call a system function directly from a shell script
+* query DNS or network information
+* convert interface names ↔ indexes
+* do all this without Python, Perl, or other scripting languages
 
-`lcall` targets these cases without trying to be a universal FFI.
+`lcall` targets these cases with a small, predictable, compiled tool.
 
 ## Design goals
 
-- minimalism
-- statically described function set
-- explicit argument descriptions
-- no virtual machines or persistent state
-- CLI → libc → stdout / exit code
+* minimalism
+* statically described function set
+* explicit argument descriptions
+* simple CLI → libc → stdout / exit code
 
 ## Non-goals
 
-- not a general-purpose FFI
-- not a replacement for Python ctypes
-- not RPC, not a daemon (at least for now)
-- not suitable for arbitrary structs or pointer-heavy APIs
+* not a general-purpose FFI
+* not a replacement for Python `ctypes`
+* not a daemon or RPC service
+* not designed for complex structs or pointer-heavy APIs
 
-## Usage (concept)
+## Usage
+
+```sh
+lcall <function> [arg1=value1 arg2=value2 ...]
+```
+
+Arguments are passed as `name=value` pairs. Only simple types are supported:
+
+* strings (hostnames, service names)
+* integers (port numbers, indexes)
+
+Complex types (pointers, structs) are either omitted or initialized internally.
+
+### Examples
 
 ```sh
 lcall getaddrinfo node=example.com service=80
+lcall getnameinfo addr=127.0.0.1 service=80
+lcall if_nametoindex ifname=eth0
+lcall if_indextoname ifindex=2
+lcall time
 ```
 
-Arguments are passed as `name=value` pairs.
+## Functions
 
-Only simple argument types are supported:
-
-- strings
-- integers
-
-Complex arguments (`struct`, pointers, callbacks) are either:
-
-- omitted
-- passed as `NULL`
-- initialized with reasonable defaults inside the wrapper
+| Function       | Status             | Description                                  | Arguments                                    |
+| -------------- | ------------------ | -------------------------------------------- | -------------------------------------------- |
+| getaddrinfo    | :white_check_mark: | network address and service translation      | node=&lt;hostname&gt; [service=&lt;port&gt;] |
+| getnameinfo    | :white_check_mark: | convert a socket address to host and service | addr=&lt;IP&gt; service=&lt;port&gt;         |
+| if_nametoindex | :white_check_mark: | interface name → index                       | ifname=&lt;name&gt;                          |
+| if_indextoname | :white_check_mark: | interface index → name                       | ifindex=&lt;number&gt;                       |
 
 ## Current status
 
-- early prototype
-- unstable API
-- very small function set
-- developed incrementally based on real use cases
-
-| f()               | :x: :white_check_mark: | Description                                                  |
-| ----------------- | -----------------------| -------------------------------------------------------------|
-| getaddrinfo       | :white_check_mark:     | network address and service translation                      |
-| getnameinfo       | :white_check_mark:     | convert a socket address to a corresponding host and service |
-| if_nametoindex    | :white_check_mark:     | interface names to indexes conversion                        |
-| if_indextoname    | :white_check_mark:     | interface indexes to names mapping                           |
-| setpriority       | :white_check_mark:     | set program scheduling priority                              |
-| getpriority       | :white_check_mark:     | get program scheduling priority                              |
-| time              | :white_check_mark:     | time as the number of seconds since the Epoch                |
-| getuid and bros   | :white_large_square:   | getuid, geteuid & getgid, getegid get user & group identity  |
-| sysconf           | :white_large_square:   | TBD                                                          |
-| pathconf          | :white_large_square:   | TBD                                                          |
-| strerror          | :white_large_square:   | TBD                                                          |
-
-## Possible future directions
-
-- support for additional libraries via `dlopen`
-- optional daemon mode with persistent state
-- extended argument types
-- IDL-based function descriptions
-
-Or it may get rewritten entirely. That is also a valid outcome.
+* minimal, stable CLI utility
+* all implemented functions tested
+* ready for general use
+* cross-platform where supported (POSIX)
